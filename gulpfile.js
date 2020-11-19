@@ -22,68 +22,68 @@ const antUrl = `http://apache.mirrors.spacedump.net/ant/binaries/${antName}-bin.
 
 const isDebug = process.env.DEBUG && process.env.DEBUG !== '0';
 
-gulp.task( 'clean', ( ) =>
-	rimraf( buildRoot )
-);
-
-gulp.task( 'make-build-dir', async ( ) =>
-	await mkdirp( buildRoot )
-);
-
-gulp.task( 'clone-libphonenumber', gulp.series( 'make-build-dir', ( ) =>
-	gitClone( libphonenumberUrl, 'libphonenumber', libphonenumberVersion )
-) );
-
-gulp.task( 'clone-closure-library', gulp.series( 'make-build-dir', ( ) =>
-	gitClone( closureLibraryUrl, 'closure-library', 'v20171112' )
-) );
-
-gulp.task( 'checkout-closure-linter', gulp.series( 'make-build-dir', ( ) =>
-	gitClone( closureLinterUrl, 'closure-linter' )
-) );
-
-gulp.task( 'checkout-python-gflags', gulp.series( 'make-build-dir', ( ) =>
-	gitClone( pythonGflagsUrl, 'python-gflags' )
-) );
-
-gulp.task( 'download-ant', gulp.series(
-	'make-build-dir',
-	( ) =>
-		runCommand(
-			'curl',
-			[ '-L', '-o', antTar, antUrl ],
-			{ cwd: buildRoot }
-		),
-	( ) =>
-		runCommand(
-			'tar',
-			[ 'zxf', antTar ],
-			{ cwd: buildRoot }
-		)
-) );
-
-gulp.task( 'download-deps', gulp.parallel(
-	'clone-libphonenumber',
-	'clone-closure-library',
-	'checkout-closure-linter',
-	'checkout-python-gflags',
-	'download-ant'
-) );
-
-gulp.task( 'build-deps', gulp.series( 'download-deps' ) );
+// gulp.task( 'clean', ( ) =>
+// 	rimraf( buildRoot )
+// );
+//
+// gulp.task( 'make-build-dir', async ( ) =>
+// 	await mkdirp( buildRoot )
+// );
+//
+// gulp.task( 'clone-libphonenumber', gulp.series( 'make-build-dir', ( ) =>
+// 	gitClone( libphonenumberUrl, 'libphonenumber', libphonenumberVersion )
+// ) );
+//
+// gulp.task( 'clone-closure-library', gulp.series( 'make-build-dir', ( ) =>
+// 	gitClone( closureLibraryUrl, 'closure-library', 'v20171112' )
+// ) );
+//
+// gulp.task( 'checkout-closure-linter', gulp.series( 'make-build-dir', ( ) =>
+// 	gitClone( closureLinterUrl, 'closure-linter' )
+// ) );
+//
+// gulp.task( 'checkout-python-gflags', gulp.series( 'make-build-dir', ( ) =>
+// 	gitClone( pythonGflagsUrl, 'python-gflags' )
+// ) );
+//
+// gulp.task( 'download-ant', gulp.series(
+// 	'make-build-dir',
+// 	( ) =>
+// 		runCommand(
+// 			'curl',
+// 			[ '-L', '-o', antTar, antUrl ],
+// 			{ cwd: buildRoot }
+// 		),
+// 	( ) =>
+// 		runCommand(
+// 			'tar',
+// 			[ 'zxf', antTar ],
+// 			{ cwd: buildRoot }
+// 		)
+// ) );
+//
+// gulp.task( 'download-deps', gulp.parallel(
+// 	'clone-libphonenumber',
+// 	'clone-closure-library',
+// 	'checkout-closure-linter',
+// 	'checkout-python-gflags',
+// 	'download-ant'
+// ) );
+//
+// gulp.task( 'build-deps', gulp.series( 'download-deps' ) );
 
 gulp.task( 'build-libphonenumber', ( ) => {
 	var args = [ '-f', 'build.xml', 'compile-exports' ];
 	return runCommand( `${buildRoot}/${antName}/bin/ant`, args, { cwd: '.' } );
 } );
 
-gulp.task( 'build', gulp.series( 'build-deps', 'build-libphonenumber' ) );
+gulp.task( 'build', gulp.series( 'build-libphonenumber' ) );
 
 gulp.task( 'update-readme', ( ) =>
 	updateReadme( )
 );
 
-gulp.task( 'default', gulp.series( 'clean', 'build', 'update-readme' ) );
+gulp.task( 'default', gulp.series( 'build', 'update-readme' ) );
 
 async function updateReadme( )
 {

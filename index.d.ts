@@ -1,5 +1,5 @@
 
-declare namespace AwesomePhonenumber
+declare namespace AwesomePhonenumberFork
 {
 	type PhoneNumberFormat =
 		'e164' |
@@ -44,6 +44,8 @@ declare namespace AwesomePhonenumber
 		static getSupportedRegionCodes( ): string[ ];
 		static getExample( regionCode: string, type?: PhoneNumberTypes ): PhoneNumber;
 		static getAsYouType( regionCode: string ): AsYouType;
+		static getPhoneUtil( ): any;
+		static releaseMemory( ): void;
 	}
 
 	class AsYouType
@@ -56,4 +58,4 @@ declare namespace AwesomePhonenumber
 	}
 }
 
-export default AwesomePhonenumber.PhoneNumber;
+export default AwesomePhonenumberFork.PhoneNumber;

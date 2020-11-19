@@ -262,6 +262,42 @@ PhoneNumber.getAsYouType = function( regionCode )
 	return new AsYouType( regionCode );
 }
 
+PhoneNumber.getPhoneUtil = function( )
+{
+    return phoneUtil;
+}
+
+PhoneNumber.releaseMemory = function( )
+{
+	let pn = phoneUtil;
+	for (const i in pn) {
+		if (pn.hasOwnProperty(i)) {
+			const iVal = pn[i];
+			for (const j in iVal) {
+				if (iVal.hasOwnProperty(j)) {
+					const jVal = iVal[j];
+					for (const k in jVal) {
+						if (jVal.hasOwnProperty(k)) {
+							jVal[k].__proto__ = Object.prototype;
+							delete jVal[k];
+							continue;
+						}
+						break;
+					}
+					jVal.__proto__ = Object.prototype;
+					delete iVal[j];
+					continue;
+				}
+				break;
+			}
+			iVal.__proto__ = Object.prototype;
+			pn[i] = {};
+		}
+		break;
+	}
+	pn = undefined;
+}
+
 PhoneNumber.prototype.toJSON = function( )
 {
 	return this._json;
@@ -394,6 +430,10 @@ goog.exportSymbol( 'PhoneNumber.getExample',
 	PhoneNumber.getExample );
 goog.exportSymbol( 'PhoneNumber.getAsYouType',
 	PhoneNumber.getAsYouType );
+goog.exportSymbol( 'PhoneNumber.getPhoneUtil',
+    PhoneNumber.getPhoneUtil );
+goog.exportSymbol( 'PhoneNumber.releaseMemory',
+    PhoneNumber.releaseMemory );
 
 goog.exportSymbol( 'PhoneNumber.prototype.toJSON',
 	PhoneNumber.prototype.toJSON );
